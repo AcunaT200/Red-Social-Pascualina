@@ -3,7 +3,7 @@ Proyecto de Aula - Red Social Pascualina para Base de Datos I
 
 # Proyecto de Aula: Red Social Pascualina
 
-<img src="logo.png" alt="Logo Pascual Bravo" width="200"/>
+<img src="Logo.png" alt="Logo Pascual Bravo" width="200"/>
 
   Institución: Institución Universitaria Pascual Bravo
   Docente: JAIME ERNESTO SOTO URDANETA
