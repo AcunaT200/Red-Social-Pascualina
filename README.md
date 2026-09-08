@@ -16,6 +16,7 @@ Proyecto de Aula - Red Social Pascualina para Base de Datos I
 El propósito de este proyecto de aula es diseñar y estructurar el modelo lógico y conceptual de una base de datos relacional para la "Red Social Pascualina". Esta plataforma está diseñada exclusivamente para la comunidad de la Institución Universitaria Pascual Bravo, permitiendo la interacción académica, social y comercial entre estudiantes, docentes y egresados. A través de este diseño, se garantiza la integridad de los datos, la correcta normalización y el manejo eficiente de usuarios, roles, publicaciones, notificaciones y la gestión transaccional de servicios y productos institucionales.
 
 ## Equipo de Trabajo - Grupo #52
+## EQUIPO C
 * Tomás Acuña Alzate
 * Santiago Mejía Torres
 * Samuel Pérez Jaramillo
