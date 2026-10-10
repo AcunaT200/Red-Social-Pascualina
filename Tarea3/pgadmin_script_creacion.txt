@@ -1,0 +1,252 @@
+------------
+----------
+--------
+-----
+---
+--
+
+
+	CREATE TABLE rol (
+	id_rol     SERIAL 	   PRIMARY KEY,
+	nombre_rol VARCHAR(20) NOT NULL
+	);
+	 
+
+	CREATE TABLE tipo_usuario (
+	id_tipo_usuario SERIAL      PRIMARY KEY,
+	n_tipo_usuario  VARCHAR(20) NOT NULL
+	);
+
+	CREATE TABLE grupo (
+	id_grupo          SERIAL 	   	    PRIMARY KEY,
+    nombre_grupo      VARCHAR(30) 		NOT NULL,
+    descripcion_grupo VARCHAR(250)      NOT NULL,
+    categoria_grupo   VARCHAR(20) 	    NOT NULL
+	);
+
+
+	CREATE TABLE tipo_servicio (
+	id_tipo_servicio SERIAL 		PRIMARY KEY,
+	n_tipo_servicio  VARCHAR(50)	NOT NULL
+	);
+
+	CREATE TABLE tipo_producto (
+	id_tipo_producto SERIAL 		PRIMARY KEY,
+	n_tipo_producto  VARCHAR(50)	NOT NULL
+	);
+
+	CREATE TABLE tipo_evento (
+	id_tipo_evento SERIAL 		PRIMARY KEY,
+	n_tipo_evento  VARCHAR(50)	NOT NULL
+	);
+
+
+	CREATE TABLE usuario (
+	id_cedula      INTEGER PRIMARY KEY,
+	p_nombre       VARCHAR(50) NOT NULL,
+	s_nombre       VARCHAR(50),
+	p_apellido     VARCHAR(50) NOT NULL,
+	s_apellido     VARCHAR(50),
+	direccion      VARCHAR(100),
+	correo         VARCHAR(100) UNIQUE,
+	clave          VARCHAR(15)   NOT NULL,
+	nombre_usuario VARCHAR(30) UNIQUE,
+	id_rol         INTEGER NOT NULL,
+    CONSTRAINT fk_usuario_rol FOREIGN KEY (id_rol) REFERENCES rol(id_rol) ON DELETE RESTRICT ON UPDATE CASCADE
+
+	);
+
+
+	CREATE TABLE perfil (
+	area_estudio       VARCHAR(100),
+	descripcion_perfil VARCHAR(300),
+	id_cedula          INTEGER PRIMARY KEY,
+    CONSTRAINT fk_perfil_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE
+
+	);
+	
+	
+
+	CREATE TABLE publicacion (
+	id_publicacion        SERIAL       PRIMARY KEY,
+	categoria_publicacion VARCHAR(50),
+    contenido_publicacion VARCHAR(300) NOT NULL,
+	fecha_publicacion     DATE         NOT NULL,
+	id_cedula             INTEGER      NOT NULL,
+	CONSTRAINT fk_publicacion_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE
+
+);
+
+
+	CREATE TABLE publicidad (
+	id_publicidad        SERIAL       PRIMARY KEY,
+	titulo_publicidad    VARCHAR(20)  NOT NULL,
+	contenido_publicidad VARCHAR(200) NOT NULL,
+	enlace_destino       VARCHAR(255) UNIQUE,
+	fecha_publicacion    DATE         NOT NULL,
+	id_cedula            INTEGER      NOT NULL,
+	CONSTRAINT fk_publicidad_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE
+	);
+	
+	CREATE TABLE producto(
+	id_producto	     SERIAL        PRIMARY KEY,
+	nombre_producto  VARCHAR(80)   NOT NULL,
+	precio_producto  NUMERIC(10,2) NOT NULL,
+	id_tipo_producto INTEGER       NOT NULL,
+	CONSTRAINT fk_producto_tipo_producto FOREIGN KEY (id_tipo_producto) REFERENCES tipo_producto(id_tipo_producto) ON DELETE RESTRICT ON UPDATE CASCADE
+	);
+	AlTER TABLE producto ADD CONSTRAINT precio_p_validacion CHECK (precio_producto > 0 );
+   
+    
+
+	
+	CREATE TABLE servicio(
+	id_servicio	     SERIAL  PRIMARY KEY,
+	id_tipo_servicio INTEGER NOT NULL,
+	CONSTRAINT fk_servicio_tipo_servicio FOREIGN KEY (id_tipo_servicio) REFERENCES tipo_servicio(id_tipo_servicio) ON DELETE RESTRICT ON UPDATE CASCADE,
+	id_cedula        INTEGER NOT NULL,
+	CONSTRAINT fk_servicio_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE
+		);
+
+
+	CREATE TABLE evento(
+	id_evento      SERIAL       PRIMARY KEY,
+	nombre_evento  VARCHAR(100) NOT NULL,
+	fecha_evento   DATE         NOT NULL,
+	hora_evento    VARCHAR(5)   NOT NULL,
+	lugar_evento   VARCHAR(50)  NOT NULL,
+	id_tipo_evento INTEGER       NOT NULL,
+	CONSTRAINT fk_evento_tipo_evento FOREIGN KEY (id_tipo_evento) REFERENCES tipo_evento(id_tipo_evento) ON DELETE RESTRICT ON UPDATE CASCADE,
+	id_cedula      INTEGER      NOT NULL,
+	CONSTRAINT fk_evento_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE
+	);
+	
+
+
+	CREATE TABLE comentario(
+
+	id_comentario        SERIAL       PRIMARY KEY,
+	contenido_comentario VARCHAR(250) NOT NULL,
+	fecha_comentario     DATE         NOT NULL,
+	comentario_creador   VARCHAR(250),
+	comentario_ordinario VARCHAR(250),
+	id_publicacion       INTEGER       NOT NULL,
+	CONSTRAINT fk_comentario_publicacion FOREIGN KEY (id_publicacion) REFERENCES publicacion(id_publicacion) ON DELETE RESTRICT ON UPDATE CASCADE,
+	id_publicidad        INTEGER       NOT NULL,
+	CONSTRAINT fk_comentario_publicidad FOREIGN KEY (id_publicidad) REFERENCES publicidad(id_publicidad) ON DELETE RESTRICT ON UPDATE CASCADE,
+	id_cedula            INTEGER       NOT NULL,
+	CONSTRAINT fk_comentario_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE
+	);
+
+	
+
+    CREATE TABLE venta (
+    id_venta SERIAL PRIMARY KEY,
+    id_cedula_comprador INTEGER NOT NULL,
+	 CONSTRAINT fk_venta_comprador FOREIGN KEY (id_cedula_comprador) REFERENCES usuario(id_cedula)  ON DELETE RESTRICT  ON UPDATE CASCADE,
+    id_cedula_vendedor INTEGER NOT NULL,
+	 CONSTRAINT fk_venta_vendedor FOREIGN KEY (id_cedula_vendedor) REFERENCES usuario(id_cedula) ON DELETE RESTRICT  ON UPDATE CASCADE,
+    id_producto INTEGER NOT NULL,
+	CONSTRAINT fk_venta_producto FOREIGN KEY (id_producto) REFERENCES producto(id_producto) ON DELETE RESTRICT ON UPDATE CASCADE,
+    fecha_venta DATE NOT NULL,
+    metodo_pago_venta VARCHAR(10) NOT NULL
+);
+
+
+	CREATE TABLE reaccion (
+	id_reaccion	   SERIAL PRIMARY KEY,
+	Id_publicacion SERIAL NOT NULL,
+	CONSTRAINT fk_reaccion_publicacion FOREIGN KEY (id_publicacion) REFERENCES publicacion(id_publicacion) ON DELETE RESTRICT ON UPDATE CASCADE,
+	id_cedula      INTEGER NOT NULL,
+	CONSTRAINT fk_reaccion_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE
+
+);
+
+	CREATE TABLE notificacion (
+    id_notificacion        SERIAL PRIMARY KEY,
+    id_notificacion_emisor INTEGER NOT NULL,
+    id_notificacion_receptor INTEGER NOT NULL,
+    informacion_notificacion VARCHAR(300) NOT NULL,
+    fecha_notificacion     DATE NOT NULL,
+    CONSTRAINT fk_notificacion_emisor FOREIGN KEY (id_notificacion_emisor) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_notificacion_receptor  FOREIGN KEY (id_notificacion_receptor) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+	CREATE TABLE mensaje (
+    id_mensaje          SERIAL PRIMARY KEY,
+    id_mensaje_emisor   INTEGER NOT NULL,
+    id_mensaje_receptor INTEGER NOT NULL,
+    argumento_mensaje   VARCHAR(200) NOT NULL,
+    fecha_envio         DATE NOT NULL,
+    CONSTRAINT fk_mensaje_emisor FOREIGN KEY (id_mensaje_emisor) REFERENCES usuario(id_cedula)  ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_mensaje_receptor FOREIGN KEY (id_mensaje_receptor) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+
+
+
+	CREATE TABLE solicitud_servicio(
+
+	id_solicitud_servicio SERIAL PRIMARY KEY,
+	id_cedula INTEGER NOT NULL,
+	CONSTRAINT fk_solicitud_servicio_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE,
+	fecha_solicitud DATE NOT NULL,
+	estado_solicitud VARCHAR(10),
+	precio_solicitud NUMERIC(10,2) NOT NULL
+	);
+	AlTER TABLE solicitud_servicio ADD CONSTRAINT precio_ss_validacion CHECK (precio_solicitud > 0 );
+
+
+
+	CREATE TABLE miembro_grupo(
+
+	CONSTRAINT pk_miembro_grupo PRIMARY KEY (id_cedula, id_grupo),
+
+	id_cedula    INTEGER NOT NULL,
+	CONSTRAINT fk_miembro_grupo_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE,
+	id_grupo      INTEGER NOT NULL,
+	CONSTRAINT fk_miembro_grupo_grupo FOREIGN KEY (id_grupo) REFERENCES grupo(id_grupo) ON DELETE RESTRICT ON UPDATE CASCADE,
+	fecha_ingreso  DATE NOT NULL
+	);
+
+
+	CREATE TABLE inscripcion_evento(
+
+	CONSTRAINT pk_inscripcion_evento PRIMARY KEY (id_cedula, id_evento),
+	id_cedula INTEGER NOT NULL,
+	CONSTRAINT fk_miembro_grupo_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE,
+	id_evento INTEGER NOT NULL,
+	CONSTRAINT fk_inscripcion_evento_evento FOREIGN KEY (id_evento) REFERENCES evento(id_evento) ON DELETE RESTRICT ON UPDATE CASCADE,
+	fecha_inscripcion DATE NOT NULL
+);
+
+
+	CREATE TABLE reaccion_comentario(
+
+	id_reaccion_comentario SERIAL      PRIMARY KEY,
+	id_cedula              INTEGER     NOT NULL,
+	CONSTRAINT fk_reaccion_comentario_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE,
+	id_comentario          INTEGER      NOT NULL,
+	CONSTRAINT fk_reaccion_comentario_comentario FOREIGN KEY (id_comentario) REFERENCES comentario(id_comentario) ON DELETE RESTRICT ON UPDATE CASCADE,
+	tipo_reaccion          VARCHAR(200) NOT NULL,
+	fecha_reaccion         DATE         NOT NULL
+);
+
+	CREATE TABLE tipo_usuario_usuario(
+	CONSTRAINT pk_tipo_usuario_usuario PRIMARY KEY (id_tipo_usuario, id_cedula),
+	id_tipo_usuario INTEGER NOT NULL,
+	CONSTRAINT fk_tipo_usuario_usuario_tipo_usuario FOREIGN KEY (id_tipo_usuario) REFERENCES tipo_usuario(id_tipo_usuario) ON DELETE RESTRICT ON UPDATE CASCADE,
+	id_cedula INTEGER NOT NULL,
+	CONSTRAINT fk_tipo_usuario_usuario_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE,
+	fecha_asignacion DATE NOT NULL
+	);
+
+
+	CREATE TABLE publicidad_reaccion(
+	id_publicidad_reaccion SERIAL PRIMARY KEY,
+	id_cedula              INTEGER NOT NULL,
+	CONSTRAINT fk_publicidad_reaccion_usuario FOREIGN KEY (id_cedula) REFERENCES usuario(id_cedula) ON DELETE RESTRICT ON UPDATE CASCADE,
+	id_publicidad          INTEGER NOT NULL,
+	CONSTRAINT fk_publicidad_reaccion_publicidad FOREIGN KEY (id_publicidad) REFERENCES publicidad(id_publicidad) ON DELETE RESTRICT ON UPDATE CASCADE
+
+	);
