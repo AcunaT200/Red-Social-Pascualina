@@ -1,0 +1,104 @@
+-- 1.- "Agregar" un campo tipo JSON o JSONB
+ALTER TABLE usuario ADD COLUMN usuario_perfil_ex JSONB;
+
+-- 2.- Agregar un par de registros (con datos diferentes al ejemplo base)
+INSERT INTO rol (nombre_rol) VALUES ('Estudiante');
+INSERT INTO rol (nombre_rol) VALUES ('Docente');
+
+INSERT INTO usuario (id_cedula, p_nombre, p_apellido, nombre_usuario, clave, id_rol, usuario_perfil_ex)
+VALUES (
+    '1025892266',
+    'Tomas',
+    'Acuna',
+    'AcuWw',
+    '789123',
+    1,
+    '{
+        "proyectos_destacados": ["App de Mascotas", "Sistema de Inventario"],
+        "preferencias_contacto": {
+            "canal_preferido": "Discord",
+            "horario": "Noches"
+        }
+    }'::jsonb
+);
+
+INSERT INTO usuario (id_cedula, p_nombre, p_apellido, nombre_usuario, clave, id_rol, usuario_perfil_ex)
+VALUES (
+    '1029382931',
+    'Carlos',
+    'Gomez',
+    'Carloscl123',
+    '123456',
+    2,
+    '{
+        "titulo_academico": "Magíster en Software",
+        "certificaciones": ["AWS Certified", "Oracle Pro"],
+        "cubiculo_oficina": "Bloque 3 - Piso 2"
+    }'::jsonb
+);
+
+-- 3.- Consultar la información agregada
+SELECT 
+    id_cedula, 
+    p_nombre, 
+    usuario_perfil_ex -> 'preferencias_contacto' ->> 'horario' AS horario 
+FROM usuario 
+WHERE id_rol = 1;
+
+SELECT 
+    p_nombre, 
+    usuario_perfil_ex -> 'certificaciones' AS certificaciones 
+FROM usuario 
+WHERE id_rol = 2;
+
+
+-- 4.- Describir el campo y explicar su propósito
+-- Propósito: Almacenar datos flexibles y perfiles simples 
+-- de los usuarios (como configuraciones, preferencias o títulos) sin alterar 
+-- el esquema relacional que ya estaba puesto, haciendo consultas mediante formato binario JSONB.
+
+
+
+-- 2.- DATOS SEMI-ESTRUCTURADOS (PARA BIG DATA o IOT)
+-- Gestionar un nuevo campo "detalle_reaccion" en la tabla "reaccion"
+
+
+-- 1.- "Agregar" un campo tipo JSON o JSONB
+ALTER TABLE reaccion ADD COLUMN detalle_reaccion JSONB;
+
+-- 2.- Agregar un par de registros de información
+INSERT INTO publicacion (categoria_publicacion, contenido_publicacion, fecha_publicacion, id_cedula)
+VALUES (
+    'General', 
+    'Mi primera publicación en la Red Pascualina', 
+    CURRENT_DATE, 
+    1025892266
+);
+
+INSERT INTO reaccion (id_publicacion, id_cedula, detalle_reaccion)
+VALUES (
+    1, 
+    1025892266,
+    '{
+        "tipo_reaccion": "me_gusta",
+        "fecha_hora": "2026-03-10T14:30:00",
+        "origen_plataforma": {
+            "dispositivo": "Móvil Android",
+            "app_version": "2.4.1"
+        }
+    }'::jsonb
+);
+
+-- 3.- Consultar la información agregada
+SELECT 
+    id_publicacion, 
+    id_cedula, 
+    detalle_reaccion ->> 'tipo_reaccion' AS tipo_reaccion 
+FROM reaccion 
+WHERE id_publicacion = 1;
+
+
+-- 4.- Describir el campo y explicar su propósito
+-- Propósito: se quiere registrar de forma estructurada los datos variables asociados a las 
+-- interacciones y reacciones de los usuarios (como el tipo de interacción, marcas de tiempo 
+-- detallada del dispositivo origen) facilitando analíticas de Big Data.
