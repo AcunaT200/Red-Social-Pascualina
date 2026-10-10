@@ -1,0 +1,24 @@
+---
+ALTER TABLE usuario ADD COLUMN sexo VARCHAR(1);
+ALTER TABLE usuario RENAME COLUMN correo TO direccion_correo;
+
+CREATE TABLE concurso (
+    id_concurso          SERIAL        PRIMARY KEY,
+    nombre_concurso      VARCHAR(50)   NOT NULL,
+    descripcion_concurso VARCHAR(250)  NOT NULL,
+    version_concurso     NUMERIC(10,2) NOT NULL
+);
+
+ALTER TABLE concurso    DROP COLUMN descripcion_concurso;
+ALTER TABLE concurso    RENAME TO    competencia;
+ALTER TABLE competencia ADD COLUMN    url TEXT UNIQUE;
+ALTER TABLE competencia ADD COLUMN    fecha_inicio DATE NOT NULL;
+ALTER TABLE competencia ADD COLUMN    fecha_fin    DATE NOT NULL;
+ALTER TABLE competencia ADD CONSTRAINT limitacion CHECK (fecha_inicio <= fecha_fin);
+ALTER TABLE competencia ADD COLUMN cupo INTEGER;
+ALTER TABLE competencia ADD CONSTRAINT restriccion CHECK (cupo >= 0);
+ALTER TABLE competencia ALTER COLUMN nombre_concurso TYPE VARCHAR(40);
+ALTER TABLE competencia ADD CONSTRAINT limite CHECK (version_concurso>=1.00 AND version_concurso<= 10.00);
+CREATE INDEX orden_version ON competencia (version_concurso);
+ALTER TABLE competencia DROP COLUMN fecha_fin CASCADE;
+TRUNCATE TABLE competencia;
