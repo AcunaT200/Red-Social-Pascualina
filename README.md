@@ -18,8 +18,6 @@ El propósito de este proyecto de aula es diseñar y estructurar el modelo lógi
 ## Equipo de Trabajo - Grupo #52
 ## EQUIPO C
 * Tomás Acuña Alzate
-* Santiago Mejía Torres
 * Samuel Pérez Jaramillo
+* Santiago Mejía Torres
 * Samuel Moreno Salazar
-
-## Enlaces a Videos de Sustentación
