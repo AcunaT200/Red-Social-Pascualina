@@ -1,0 +1,88 @@
+-- ---------------------------------------------------------------------------------
+-- Scripts - Enunciados 3, 4, 5, 6 y 7 DML para consultas Sin Join, 1 Join, 2 Join, 3 Join y 4 Join
+-- ---------------------------------------------------------------------------------
+
+
+
+-- ---------------------------------------------------------------------------------
+-- 3.- Enunciado para Consulta sin JOIN
+-- Análisis de Precios y Disponibilidad en Oferta de Productos
+-- ---------------------------------------------------------------------------------
+
+SELECT id_producto AS "codigo producto",
+       nombre_producto AS "titulo descriptivo",
+       precio_producto * 1.05 AS "precio venta con recargo",
+       disponibilidad AS "estado de disponibilidad"
+FROM producto
+WHERE precio_producto BETWEEN 50000 AND 500000 AND disponibilidad = 'si'
+ORDER BY precio_producto DESC
+LIMIT 20;
+
+
+-- ---------------------------------------------------------------------------------
+-- 4.- Enunciado para consulta con 1 JOIN. 
+-- Censo Institucional de Usuarios por Categoría
+-- -----------------------------------------------------------------------------------
+
+SELECT tipo_usuario.n_tipo_usuario, COUNT(usuario.id_cedula) AS total_usuarios
+FROM usuario
+JOIN tipo_usuario_usuario ON  usuario.id_cedula = tipo_usuario_usuario.id_cedula
+JOIN tipo_usuario
+    ON tipo_usuario_usuario.id_tipo_usuario = tipo_usuario.id_tipo_usuario
+GROUP BY tipo_usuario.n_tipo_usuario
+ORDER BY total_usuarios DESC;
+
+--Aqui se hizo 2 joins pq como tenemos la relacion de tipo_ussuario_usuario entonces se usa esta y lo miso en las demas consultar donde esta
+
+-- ---------------------------------------------------------------------------------
+-- 5.- Enunciado para consulta con 2 JOINs
+-- Trazabilidad de Eventos Académicos y sus Organizadores
+-- ---------------------------------------------------------------------------------
+
+SELECT tipo_evento.n_tipo_evento, evento.nombre_evento, evento.fecha_evento,
+usuario.p_nombre, usuario.s_nombre, 
+usuario.p_apellido, usuario.s_apellido, usuario.correo
+FROM evento
+JOIN tipo_evento ON evento.id_tipo_evento = tipo_evento.id_tipo_evento
+JOIN usuario ON evento.id_cedula = usuario.id_cedula
+WHERE evento.fecha_evento BETWEEN '2025-01-01' AND '2025-12-31';
+
+
+
+
+-- ---------------------------------------------------------------------------------
+-- 6.- Enunciado para consulta SELECT con 3 JOINs
+-- Consumo de Servicios Académicos por Estudiantes Activos
+-- ---------------------------------------------------------------------------------
+
+SELECT u.p_nombre AS "Primer Nombre",u.s_nombre AS "Segundo Nombre",
+       u.p_apellido AS "Primer Apellido", u.s_apellido AS "Segundo Apellido",
+       s.n_servicio AS "Nombre del Servicio",ts.n_tipo_servicio AS "Categoría",
+       ss.fecha_solicitud AS "Fecha de Solicitud"
+FROM solicitud_servicio ss
+INNER JOIN servicio s ON ss.id_servicio = s.id_servicio
+INNER JOIN tipo_servicio ts ON s.id_tipo_servicio = ts.id_tipo_servicio
+INNER JOIN usuario u ON ss.id_cedula = u.id_cedula
+INNER JOIN tipo_usuario_usuario tuu ON u.id_cedula = tuu.id_cedula
+WHERE tuu.id_tipo_usuario = 1 AND ss.estado_solicitud = 'Completada';
+
+
+
+-- ---------------------------------------------------------------------------------
+-- 7.- Enunciado para consulta con 4 JOINs
+-- Reporte Transaccional Consolidado de Venta de Productos
+-- ---------------------------------------------------------------------------------
+
+
+SELECT p.nombre_producto AS "Nombre del producto", tp.n_tipo_producto AS "Categoria producto", 
+       p.precio_producto AS "Precio Pagado", u.p_nombre AS "Nombre", 
+       u.s_nombre AS "Segundo Nombre", u.p_apellido AS "Apellido", 
+	   u.s_apellido AS "Segundo Apellido", tu.n_tipo_usuario AS  "Descripcion Usuario"
+FROM venta v
+INNER JOIN usuario u ON u.id_cedula = v.id_cedula_comprador
+INNER JOIN producto p ON p.id_producto = v.id_producto
+INNER JOIN tipo_producto tp ON tp.id_tipo_producto = p.id_tipo_producto 
+INNER JOIN tipo_usuario_usuario tuu ON tuu.id_cedula = v.id_cedula_comprador
+INNER JOIN tipo_usuario tu ON tu.id_tipo_usuario = tuu.id_tipo_usuario
+WHERE (tu.id_tipo_usuario = 1 OR tu.id_tipo_usuario = 3) AND p.precio_producto >100000;
+

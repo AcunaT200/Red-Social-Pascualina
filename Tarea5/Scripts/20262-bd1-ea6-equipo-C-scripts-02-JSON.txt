@@ -1,0 +1,28 @@
+--
+-- Scripts - Enunciados DML para Manipulación de Datos Semi-Estructurados (JSON)
+-- Manipulación de Campo JSON (Perfil Profesional y Competencias)
+--
+
+INSERT INTO perfil (area_estudio,descripcion_perfil,id_cedula, Resumen_Profesional)
+VALUES (
+
+	'Ingenieria de sofware',
+	'Estudiante de Ig_Software',
+    '22747935307',
+    '{
+        "Habilidades": ["Desarrollador en c++", "Organizador de sistemas de Bases de datos"],
+		"Idiomas": ["Español", "Ingles"],
+		"Proyectos Destacados": ["Creacion Red Pascualina "]
+        
+    }'::jsonb
+);
+
+
+SELECT 
+usuario.p_nombre,perfil.resumen_profesional -> 'Habilidades' AS 
+Habilidades,perfil.resumen_profesional -> 'Idiomas' AS Idiomas  
+	FROM usuario 
+	INNER JOIN perfil
+	ON usuario.id_cedula = perfil.id_cedula
+	WHERE usuario.id_cedula = 22747935307
+

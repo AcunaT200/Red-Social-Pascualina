@@ -1,0 +1,24 @@
+--
+-- Scripts - 8.- Enunciados para Consultas con Funciones de Agregación
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
+-- Script del Enunciado 8.1 — Función COUNT: Volumen Global de Solicitudes de Servicio
+-- Calcular la cantidad total de solicitudes de servicios registradas en la plataforma agrupadas por el estado de la transacción (Completado, Pendiente, Cancelado). 
+-- ---------------------------------------------------------------------------------------------------------------------------------
+
+SELECT estado_solicitud AS "Estado de la Solicitud", COUNT(*) AS "Cantidad"
+FROM  solicitud_servicio
+WHERE estado_solicitud = 'Completada' OR estado_solicitud = 'Pendiente'
+   OR estado_solicitud = 'Cancelada'
+GROUP BY estado_solicitud;
+
+
+-- ---------------------------------------------------------------------------------------------------------------------------------
+-- Script del Enunciado 8.2 — Función SUM: Recaudo Comercial Total por Categoría de Producto
+-- Calcular el monto total acumulado ($) en ventas de productos pertenecientes a la categoría 'Libros' y 'Tecnología/Computadores'.
+-- ---------------------------------------------------------------------------------------------------------------------------------
+SELECT tipo_producto.n_tipo_producto, SUM(producto.precio_producto)
+FROM tipo_producto
+INNER JOIN producto ON tipo_producto.id_tipo_producto = producto.id_tipo_producto
+WHERE tipo_producto.id_tipo_producto = 1 OR  tipo_producto.id_tipo_producto = 15
+GROUP BY tipo_producto.n_tipo_producto

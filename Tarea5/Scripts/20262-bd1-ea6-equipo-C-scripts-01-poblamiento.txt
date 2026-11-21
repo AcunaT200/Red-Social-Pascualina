@@ -1,0 +1,473 @@
+--
+-- Script Poblamiento
+--
+-- 
+
+
+--
+-- 1.1- Poblamiento Directo mediante INSERT INTO (Catálogos Base):
+
+ROL
+
+INSERT INTO rol (nombre_rol)
+VALUES
+('Administrador'),
+('Auxiliar'),
+('Miembro'),
+('Visitante');
+
+SELECT * FROM tipo_usuario
+
+TIPO USUARIO
+
+INSERT INTO tipo_usuario (n_tipo_usuario)
+VALUES
+('Estudiante'), ('Docente'), ('Egresado'), ('Empleado'), ('Empresario'), 
+('Ex-Empleado'), ('Ex-Estudiante'), ('Ex-Docente'), ('Guess');
+
+TIPO SERVICIO
+
+INSERT INTO tipo_servicio (n_tipo_servicio)
+VALUES
+('Asesoría académica'),
+('Asesoría Laboral'),
+('Curso Tecnológico'),
+('Mantenimiento Moto'),
+('Reparación artículo eletrónico'),
+('Corte de Cabello'),
+('Manicure y Pedicure'),
+('Reparación PC'),
+('Masaje terapéutico'),
+('Declaración de impuestos'),
+('Asesoría Trabajo de Grado'),
+('Viaje turístico'),
+('Transporte'),
+('Elaboración de Dulces'),
+('Reparación de Calzado'),
+('Confección vestimenta'),
+('Organización evento'),
+('Lavanderia'),
+('Guarderia De Mascotas'),
+('Atención Psicologica');
+
+SELECT * FROM tipo_servicio
+
+--TIPO EVENTO
+
+INSERT INTO tipo_evento (n_tipo_evento)
+VALUES
+('Asesoría académica'),
+        ('Asesoría Laboral'),
+        ('Curso Tecnológico'),
+        ('Mantenimiento Moto'),
+        ('Reparación artículo eletrónico'),
+        ('Corte de Cabello'),
+        ('Manicure y Pedicure'),
+        ('Reparación PC'),
+        ('Masaje terapéutico'),
+        ('Declaración de impuestos'),
+        ('Asesoría Trabajo de Grado'),
+        ('Viaje turístico'),
+        ('Transporte'),
+        ('Elaboración de Dulces'),
+        ('Reparación de Calzado'),
+        ('Confección vestimenta'),
+        ('Organización evento'),
+        ('Lavanderia'),
+        ('Guarderia De Mascotas'),
+        ('Atención Psicologica');
+
+SELECT * FROM tipo_evento
+
+TIPO PRODUCTO 
+
+INSERT INTO tipo_producto (n_tipo_producto)
+VALUES
+('Libro'),
+('Motocicleta'),
+('Vehículo'),
+('Almuerzo'),
+('Desayuno'),
+('Ropa'),
+('Cosméticos'),
+('Ticket de Concierto'),
+('Bolso'),
+('Zapato'),
+('Postres'),
+('Dulces'),
+('Patineta Eléctrica'),
+('Teléfono móvil'),
+('Computador'),
+('Articulo Deportivo'),
+('Alimentos'),
+('Bicicleta'),
+('Audifonos'),
+('Silla De Ruedas')('Libro'),
+('Motocicleta'),
+('Vehículo'),
+('Almuerzo'),
+('Desayuno'),
+('Ropa'),
+('Cosméticos'),
+('Ticket de Concierto'),
+('Bolso'),
+('Zapato'),
+('Postres'),
+('Dulces'),
+('Patineta Eléctrica'),
+('Teléfono móvil'),
+('Computador'),
+('Articulo Deportivo'),
+('Alimentos'),
+('Bicicleta'),
+('Audifonos'),
+('Silla De Ruedas');
+
+SELECT * FROM tipo_producto
+
+
+
+--
+-- 1.2- Poblamiento Masivo Automatizado (Generadores Aleatorios):
+--
+
+
+
+-- USUARIO  
+
+INSERT INTO usuario (n,id_cedula, p_nombre, s_nombre, p_apellido, s_apellido, direccion, clave, id_rol, id_tipo_evento, id_tipo_producto, id_tipo_servicio) 
+SELECT 
+    g AS n,
+    (1000000 + floor(random() * 99999999999)::BIGINT) AS id_cedula,
+   (ARRAY[
+    'Pedro', 'Jose', 'Santiago', 'Maria', 'Marta', 'Samuel', 'Jason', 'Freddy', 'Andrea', 'Camila',
+    'Carlos', 'Ana', 'Luis', 'Sofia', 'Mateo', 'Valentina', 'Alejandro', 'Isabella', 'Daniel', 'Lucia',
+    'Diego', 'Mariana', 'Sebastian', 'Gabriela', 'Nicolas', 'Daniela', 'Esteban',
+    'Gabriel', 'Victoria', 'Emmanuel', 'Ximena', 'Julian'
+])[1 + floor(random() * 32)::int] AS p_nombre,
+
+CASE 
+    WHEN random() < 0.4 THEN 'N/A' 
+    ELSE (ARRAY[
+        'Sara', 'Alberto', 'Ernesto', 'Tomas', 'Richard', 'Jesus', 'Juan', 'Sandra', 'Josue', 'Laura',
+        'Felipe', 'Andres', 'Manuela', 'Javier', 'Elena', 'Fernando', 'Paula', 'Gonzalo', 'Valeria', 'Rodrigo',
+        'Carmen', 'Guillermo', 'Alicia', 'Ignacio', 'Rocio', 'David',
+        'Adrian', 'Natalia', 'Joaquin', 'Renata', 'Simon'
+    ])[1 + floor(random() * 31)::int]
+END AS s_nombre,
+    --|| ' ' || 
+   (ARRAY['Mejia', 'Garzon', 'Salazar', 'Acuna', 'Alzate', 'Moreno', 'Perez', 'Jaramillo', 'Monsalve', 'Palacios',
+    'Gomez', 'Lopez', 'Martinez', 'Rodriguez', 'Sanchez', 'Zapata', 'Valencia', 'Gaviria', 'Ospina', 'Ceballos'])[1 + floor(random() * 20)::int] AS p_apellido,
+
+(ARRAY['Velazco', 'Gutierrez', 'Varon', 'Duque', 'Alvarez', 'Rojas', 'Acevedo', 'Toro', 'Segura', 'Puerta',
+    'Castro', 'Vargas', 'Morales', 'Suarez', 'Rios', 'Giraldo', 'Ramirez', 'Herrera', 'Restrepo', 'Cardona'])[1 + floor(random() * 20)::int] AS s_apellido,
+
+    ('Calle ' || (1 + floor(random() * 100))::int
+    || ' #' || (1 + floor(random() * 100))::int
+    || '-' || (1 + floor(random() * 999))::int) AS direccion,
+
+    (10000 + floor(random() * 99999)::int) AS clave,
+    (1 + floor(random() * 4)::int) AS id_rol,
+
+    CASE WHEN random() < 0.2 THEN NULL ELSE 
+    (1 + floor(random() * 20)::int) END AS id_tipo_evento,
+
+    CASE WHEN random() < 0.55 THEN NULL ELSE
+    (1 + floor(random() * 20)::int) END AS id_tipo_producto,
+
+    CASE WHEN random() < 0.6 THEN NULL Else
+    (1 + floor(random() * 20)::int) END AS id_tipo_servicio
+
+FROM generate_series(1, 18550) AS g;
+
+UPDATE usuario
+SET 
+correo = lower(p_nombre) || '.' || lower(p_apellido) || (1000 + n) || '@pascualbravo.edu.co',
+nombre_usuario = lower(p_nombre) || '.' || n
+WHERE correo IS NULL;
+
+--varias personas pueden ser tanto profesor como estudiantes por eso se realizo en esta tabla
+
+INSERT INTO tipo_usuario_usuario (id_cedula, id_tipo_usuario, fecha_asignacion)
+SELECT 
+    id_cedula,
+    CASE 
+        WHEN n <= 7000 THEN 1
+        WHEN n <= 7500 THEN 2
+        WHEN n <= 17500 THEN 3
+        WHEN n <= 18000 THEN 4
+        WHEN n <= 18050 THEN 5
+        WHEN n <= 18100 THEN 6
+        WHEN n <= 18400 THEN 7
+        WHEN n <= 18500 THEN 8
+        ELSE 9
+    END AS id_tipo_usuario,
+    CURRENT_DATE - (floor(random() * 365)::int) AS fecha_asignacion
+FROM (
+    SELECT id_cedula, ROW_NUMBER() OVER () AS n
+    FROM usuario
+) AS u
+WHERE n <= 18550;
+
+--------------------------
+
+SERVICIO
+
+INSERT INTO evento (nombre_evento, fecha_evento, hora_evento, lugar_evento, id_tipo_evento, id_cedula)
+SELECT 
+
+    CASE u.id_tipo_evento
+        WHEN 1  THEN (ARRAY['Congreso Internacional de Software', 'Congreso de Innovación', 'Congreso Nacional de TI'])[1 + floor(random() * 3)::int]
+        WHEN 2  THEN (ARRAY['Conferencia de Ciberseguridad', 'Conferencia de Inteligencia Artificial', 'Conferencia Cloud'])[1 + floor(random() * 3)::int]
+        WHEN 3  THEN (ARRAY['Taller de Bases de Datos', 'Taller de React', 'Taller de Estructuras de Datos'])[1 + floor(random() * 3)::int]
+        WHEN 4  THEN (ARRAY['Noche de Salsa', 'Taller de Baile Urbano', 'Competencia de Baile'])[1 + floor(random() * 3)::int]
+        WHEN 5  THEN (ARRAY['Fiesta de Fin de Semestre', 'Fiesta de Bienvenida', 'Fiesta de Halloween'])[1 + floor(random() * 3)::int]
+        WHEN 6  THEN (ARRAY['Reunión de Equipos Scrum', 'Conformación de Células', 'Asignación de Grupos de Proyecto'])[1 + floor(random() * 3)::int]
+        WHEN 7  THEN (ARRAY['Excursión a Guatapé', 'Viaje a Santa Fe de Antioquia', 'Paseo al Eje Cafetero'])[1 + floor(random() * 3)::int]
+        WHEN 8  THEN (ARRAY['Concierto de Rock', 'Festival de Música en Vivo', 'Concierto Acústico'])[1 + floor(random() * 3)::int]
+        WHEN 9  THEN (ARRAY['Reunión Semillero de Investigación', 'Semillero de Algoritmia', 'Debate de Semillero'])[1 + floor(random() * 3)::int]
+        WHEN 10 THEN (ARRAY['Feria Gastronómica Antioqueña', 'Festival de Comida Callejera', 'Feria de Postres'])[1 + floor(random() * 3)::int]
+        WHEN 11 THEN (ARRAY['Feria de Moda y Emprendimiento', 'Mercado de Ropa Vintage', 'Expo Diseño Textil'])[1 + floor(random() * 3)::int]
+        WHEN 12 THEN (ARRAY['Paseo Nocturno en Moto', 'Ruta Biker Antioquia', 'Encuentro de Motocicletas'])[1 + floor(random() * 3)::int]
+        WHEN 13 THEN (ARRAY['Expo Tecnología', 'Feria de Hardware y Software', 'Hackathon Tecnológica'])[1 + floor(random() * 3)::int]
+        WHEN 14 THEN (ARRAY['Cine Foro Sci-Fi', 'Proyección de Película Independiente', 'Noche de Cine'])[1 + floor(random() * 3)::int]
+        WHEN 15 THEN (ARRAY['Reunión Desarrolladores C#', 'Encuentro Club de Lectura', 'Reunión Animación 3D'])[1 + floor(random() * 3)::int]
+        WHEN 16 THEN (ARRAY['Jornada de Entrevistas BPO', 'Entrevistas Técnicas Junior', 'Proceso de Selección'])[1 + floor(random() * 3)::int]
+        WHEN 17 THEN (ARRAY['Boda Comunitaria', 'Celebración de Matrimonio', 'Recepción de Bodas'])[1 + floor(random() * 3)::int]
+        WHEN 18 THEN (ARRAY['Torneo Gamer Valorant', 'Competencia eSports LoL', 'Torneo Tekken 8'])[1 + floor(random() * 3)::int]
+        WHEN 19 THEN (ARRAY['Eucaristía de Inicio de Semestre', 'Misa Comunitaria', 'Celebración Litúrgica'])[1 + floor(random() * 3)::int]
+        WHEN 20 THEN (ARRAY['Exposición de Arte Moderno', 'Feria de Ilustración y Blender', 'Galería de Arte'])[1 + floor(random() * 3)::int]
+    END AS nombre_evento,
+    
+    -- Fecha aleatoria dentro de los últimos 365 días
+    (CURRENT_DATE - floor(random() * 365)::int) AS fecha_evento,
+    
+    -- Hora aleatoria
+    (TIME '05:00:00' + (random() * 36000)::int * INTERVAL '1 second')::time AS hora_evento,
+    
+    -- Lugar aleatorio de los 8 disponibles usando la misma estructura
+    (ARRAY['Florida', 'Medellin', 'Aranjuez', 'Pascual Bravo', 'Teatro PB', 'Envigado', 'Robledo', 'Parque Berrio'])[1 + floor(random() * 8)::int] AS lugar_evento,
+    
+ 
+    u.id_tipo_evento,
+    u.id_cedula
+FROM (
+    SELECT 
+        id_cedula,
+        id_tipo_evento,
+        ROW_NUMBER() OVER () AS n
+    FROM usuario
+    WHERE id_tipo_evento IS NOT NULL 
+) AS u
+WHERE u.n <= 3000;
+
+-----------------------------------------
+
+----SERVICIO
+
+INSERT INTO servicio (n_servicio, id_cedula, id_tipo_servicio)
+SELECT
+
+	CASE u.id_tipo_servicio
+	    WHEN 1  THEN (ARRAY['Tutoría de Cálculo y Álgebra', 'Clases Particulares de Física', 'Refuerzo en Programación'])[1 + floor(random() * 3)::int]
+        WHEN 2  THEN (ARRAY['Revisión y Diseño de Hoja de Vida', 'Preparación para Entrevistas', 'Consultoría en Derecho Laboral'])[1 + floor(random() * 3)::int]
+        WHEN 3  THEN (ARRAY['Curso Básico de Excel y Ofimática', 'Bootcamp de Desarrollo Web', 'Taller de Introducción a Python'])[1 + floor(random() * 3)::int]
+        WHEN 4  THEN (ARRAY['Cambio de Aceite y Filtros Moto', 'Sincronización y Frenos de Moto', 'Mantenimiento General Motocicleta'])[1 + floor(random() * 3)::int]
+        WHEN 5  THEN (ARRAY['Reparación de Televisores y Audio', 'Arreglo de Electrodomésticos', 'Mantenimiento de Consolas y Controles'])[1 + floor(random() * 3)::int]
+        WHEN 6  THEN (ARRAY['Corte de Cabello y Barba', 'Corte Dama y Cepillado', 'Cambio de Look y Barbería'])[1 + floor(random() * 3)::int]
+        WHEN 7  THEN (ARRAY['Manicure Semipermanente', 'Pedicure Spa y Limpieza', 'Uñas Acrílicas y Decoración'])[1 + floor(random() * 3)::int]
+        WHEN 8  THEN (ARRAY['Formateo e Instalación de Windows', 'Mantenimiento Preventivo y Limpieza PC', 'Cambio de Disco SSD y RAM'])[1 + floor(random() * 3)::int]
+        WHEN 9  THEN (ARRAY['Masaje Relajante Antiestrés', 'Masaje Descontracturante de Espalda', 'Terapia Muscular y Descarga'])[1 + floor(random() * 3)::int]
+        WHEN 10 THEN (ARRAY['Declaración de Renta Personas Naturales', 'Asesoría Tributaria y Contable', 'Gestión de Impuestos y Facturación'])[1 + floor(random() * 3)::int]
+        WHEN 11 THEN (ARRAY['Asesoría Metodológica de Tesis', 'Corrección de Estilo y Normas APA', 'Acompañamiento Proyecto de Grado'])[1 + floor(random() * 3)::int]
+        WHEN 12 THEN (ARRAY['Tour Guiado por Medellín', 'Pasadía a Guatapé y Peñol', 'Recorrido Cafetero y Pueblos'])[1 + floor(random() * 3)::int]
+        WHEN 13 THEN (ARRAY['Servicio de Acarreos y Mudanzas', 'Transporte Privado al Aeropuerto', 'Servicio de Mensajería y Encomiendas'])[1 + floor(random() * 3)::int]
+        WHEN 14 THEN (ARRAY['Tortas Personalizadas por Encargo', 'Postres Artesanales y Repostería', 'Mesa de Dulces para Celebraciones'])[1 + floor(random() * 3)::int]
+        WHEN 15 THEN (ARRAY['Cambio de Suelas y Tapas', 'Costura y Restauración de Tenis', 'Limpieza y Tintura de Calzado'])[1 + floor(random() * 3)::int]
+        WHEN 16 THEN (ARRAY['Arreglos de Ropa y Dobladillos', 'Confección de Prendas a la Medida', 'Diseño y Ajuste de Vestidos'])[1 + floor(random() * 3)::int]
+        WHEN 17 THEN (ARRAY['Logística y Decoración de Fiestas', 'Organización de Eventos Corporativos', 'Alquiler de Sonido y Coordinación'])[1 + floor(random() * 3)::int]
+        WHEN 18 THEN (ARRAY['Lavado y Secado por Libra', 'Lavado en Seco de Trajes y Edredones', 'Planchado y Desmanchado de Ropa'])[1 + floor(random() * 3)::int]
+        WHEN 19 THEN (ARRAY['Guardería Campestre para Perros', 'Cuidado de Mascotas por Día', 'Paseo Canino y Hospedaje'])[1 + floor(random() * 3)::int]
+        WHEN 20 THEN (ARRAY['Consulta Psicológica Individual', 'Terapia de Manejo de Ansiedad', 'Orientación Vocacional y Bienestar'])[1 + floor(random() * 3)::int]
+    END AS n_servicio,
+    u.id_cedula,
+    u.id_tipo_servicio
+FROM (
+    SELECT 
+        id_cedula, 
+        id_tipo_servicio, 
+        ROW_NUMBER() OVER () AS n
+    FROM usuario
+    WHERE id_tipo_servicio IS NOT NULL 
+) AS u
+WHERE u.n <= 3000;
+
+-----------------------------------------------
+--PRODUCTO
+
+INSERT INTO producto (id_tipo_producto, nombre_producto, precio_producto, disponibilidad)
+VALUES
+    (1, 'Cien Años de Soledad', 45000.00, 'si'),
+    (1, 'Los juegos del hambre', 95000.00, 'si'),
+    (1, 'Base de Datos 1', 78000.00, 'si'),
+    (1, 'El Principito Edición Especial', 35000.00, 'si'),
+
+    (2, 'Yamaha FZ 250cc', 14500000.00, 'si'),
+    (2, 'Bajaj Pulsar NS 200', 11200000.00, 'si'),
+    (2, 'Honda AKT NKD 125', 5400000.00, 'si'),
+
+    (3, 'Chevrolet Onix Turbo', 62000000.00, 'si'),
+    (3, 'Mazda 3 Touring Auto', 98000000.00, 'si'),
+    (3, 'Renault Kwid Zen', 48000000.00, 'si'),
+
+    (4, 'Bandeja Paisa', 18000.00, 'si'),
+    (4, 'Pechuga a la Plancha', 16000.00, 'si'),
+    (4, 'Menú del Día Vegetariano', 14000.00, 'si'),
+
+    (5, 'Desayuno Tradicional Arepa con Queso y Chocolate', 9500.00, 'si'),
+    (5, 'Desayuno Americano Huevos y Tostadas', 12000.00, 'si'),
+    (5, 'Desayuno Calentado Antioqueño', 13500.00, 'si'),
+
+    (6, 'Camiseta Algodón Polo', 65000.00, 'si'),
+    (6, 'Pantalón Jean Slim Fit', 120000.00, 'si'),
+    (6, 'Chaqueta Impermeable', 180000.00, 'si'),
+    (6, 'Buzo Algodón con Capota', 85000.00, 'si'),
+
+    (7, 'Protector Solar FPS 50+', 75000.00, 'si'),
+    (7, 'Crema Hidratante Facial', 42000.00, 'si'),
+    (7, 'Kit de Maquillaje', 110000.00, 'si'),
+
+    (8, 'Localidad General', 150000.00, 'si'),
+    (8, 'Localidad VIP', 350000.00, 'si'),
+    (8, 'Palco Preferencial', 480000.00, 'si'),
+
+    (9, 'Morral Ejecutivo para Portátil', 140000.00, 'si'),
+    (9, 'Manos Libres Cuero', 95000.00, 'si'),
+    (9, 'Maletín Deportivo', 78000.00, 'si'),
+
+    (10, 'Running Nike', 320000.00, 'si'),
+    (10, 'Casual Adidas', 240000.00, 'si'),
+    (10, 'Formal de Cuero', 190000.00, 'si'),
+    (10, 'Sandalias Verano', 65000.00, 'si'),
+
+    (11, 'Porción Tarta de Queso con Frutos Rojos', 12500.00, 'si'),
+    (11, 'Volcán de Chocolate con Helado', 15000.00, 'si'),
+    (11, 'Flan de Caramelo', 8000.00, 'si'),
+
+    (12, 'Dulces Paquete Chocolates Variados', 15000.00, 'si'),
+    (12, 'Dulces Caja de Gomitas Frutales', 6000.00, 'si'),
+    (12, 'Dulces Arequipe Tradicional 250g', 8500.00, 'si'),
+
+    (13, 'Patineta Eléctrica Xiaomi Scooter Pro', 2100000.00, 'si'),
+    (13, 'Patineta Eléctrica Segway Ninebot', 1750000.00, 'si'),
+
+    (14, 'Samsung Galaxy A54', 1350000.00, 'si'),
+    (14, 'Xiaomi Redmi Note 12 Pro', 980000.00, 'si'),
+    (14, 'iPhone 13 128GB', 2900000.00, 'si'),
+
+    (15, 'Asus Core i5 16GB RAM', 2650000.00, 'si'),
+    (15, 'Lenovo Ryzen 7 512GB SSD', 2950000.00, 'si'),
+    (15, 'Computador Escritorio Todo en Uno HP Core i3', 1850000.00, 'si'),
+
+    (16, 'Articulo Deportivo Balón de Fútbol Profesional', 110000.00, 'si'),
+    (16, 'Articulo Deportivo Tapete Yoga Mat 6mm', 55000.00, 'si'),
+    (16, 'Articulo Deportivo Kit Mancuernas 10kg', 145000.00, 'si'),
+
+    (17, 'Alimentos Mercadito Frutas y Verduras Frescas', 35000.00, 'si'),
+    (17, 'Alimentos Pack Pechugas de Pollo 1kg', 22000.00, 'si'),
+    (17, 'Alimentos Bolsa de Café Especial 500g', 28000.00, 'si'),
+
+    (18, 'Bicicleta Todoterreno GW All Terrain 29"', 1250000.00, 'si'),
+    (18, 'Bicicleta Urbana de Paseo', 680000.00, 'si'),
+    (18, 'Bicicleta Ruta Aluminio 18 Velocidades', 2100000.00, 'si'),
+
+    (19, 'Audifonos Bluetooth Sony In-Ear', 180000.00, 'si'),
+    (19, 'Audifonos Diadema JBL Wireless', 240000.00, 'si'),
+    (19, 'Audifonos Gamers con Micrófono Redragon', 130000.00, 'si'),
+
+    (20, 'Silla De Ruedas Plegable Estándar', 480000.00, 'si');
+
+
+
+UPDATE producto p
+SET id_cedula = u.id_cedula,
+    disponibilidad = CASE
+        WHEN random() < 0.8 THEN 'si'
+        ELSE 'no'
+    END
+FROM (
+    SELECT id_cedula, id_tipo_producto
+    FROM usuario
+    WHERE id_tipo_producto IS NOT NULL
+) u
+WHERE p.id_tipo_producto = u.id_tipo_producto;
+
+-------------------------------------------------------------------------------
+
+--INSCRIPCION EVENTO 
+
+INSERT INTO inscripcion_evento (id_cedula, id_evento, fecha_inscripcion)
+SELECT
+    u.id_cedula,
+    e.id_evento,
+    CURRENT_DATE - ((u.id_cedula + e.id_evento) % 683)::int
+FROM usuario u
+CROSS JOIN evento e
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM inscripcion_evento ie
+    WHERE ie.id_cedula = u.id_cedula
+      AND ie.id_evento = e.id_evento
+)
+ORDER BY RANDOM()
+LIMIT 5000;
+------------------------------------------------------------------------
+
+--SOLICITUD_SERVICIO
+
+INSERT INTO solicitud_servicio (id_cedula, id_servicio, fecha_solicitud, estado_solicitud, precio_solicitud)
+SELECT 
+    u.id_cedula,
+    s.id_servicio,
+    CURRENT_DATE - ((u.id_cedula + s.id_servicio) % 365)::int,
+    CASE ((u.id_cedula + s.id_servicio) % 4)
+        WHEN 0 THEN 'Pendiente'
+        WHEN 1 THEN 'En proceso'
+        WHEN 2 THEN 'Completada'
+        ELSE 'Cancelada'
+    END,
+    (((u.id_cedula + s.id_servicio) % 150) * 1000 + 20000)::numeric
+FROM (SELECT id_cedula FROM usuario ORDER BY RANDOM() LIMIT 200) u
+CROSS JOIN (SELECT id_servicio FROM servicio ORDER BY RANDOM() LIMIT 50) s
+ORDER BY RANDOM()
+LIMIT 5000;
+------------------------------------------------------------------------
+
+-VENTA O Producto_transaccion
+
+INSERT INTO venta (id_cedula_comprador, id_cedula_vendedor, id_producto, fecha_venta, metodo_pago_venta)
+SELECT 
+    id_comprador,
+    id_vendedor,
+    id_producto,
+    (CURRENT_DATE - floor(random() * 365)::int),
+    (ARRAY['Efectivo', 'Tarjeta', 'Transferencia'])[1 + floor(random() * 3)::int]
+FROM (
+ 
+    SELECT 
+        c.id_cedula AS id_comprador,
+        v.id_cedula AS id_vendedor,
+        p.id_producto AS id_producto
+    FROM (SELECT id_cedula FROM usuario ORDER BY RANDOM() LIMIT 25) c
+    CROSS JOIN (SELECT id_cedula FROM usuario ORDER BY RANDOM() LIMIT 25) v
+    CROSS JOIN (SELECT id_producto FROM producto ORDER BY RANDOM() LIMIT 10) p
+    WHERE c.id_cedula <> v.id_cedula
+    ORDER BY random()
+    LIMIT 5000
+) AS cruce;
+
+---------------------------------------------------------------------------
+
+--
+-- 1.3- Respaldo Físico de la Base de Datos (AQUÍ O SE HACE NADA) - Se debe entregar el respaldo en archivo PLANO por aparte
+--
